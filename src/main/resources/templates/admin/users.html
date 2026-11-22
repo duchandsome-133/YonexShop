@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#usersAdminContent}, pageTitle='Quản Lý Khách Hàng', activeNav='users'}">
+        <div id="usersAdminContent">
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold text-navy mb-0">Danh Sách Tài Khoản Khách Hàng</h5>
+                        <p class="text-muted small mb-0">Quản lý và kích hoạt/khóa tài khoản người dùng mua hàng</p>
+                    </div>
+                </div>
+
+                <!-- Search -->
+                <form th:action="@{/admin/users}" method="get" class="row g-2 mb-4">
+                    <div class="col-md-6">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                            <input type="text" name="keyword" class="form-control" placeholder="Tìm theo họ tên, email, số điện thoại..." th:value="${keyword}">
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">Tìm kiếm</button>
+                        <a th:href="@{/admin/users}" class="btn btn-light btn-sm rounded-pill px-3">Đặt lại</a>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Họ và tên</th>
+                                <th>Địa chỉ Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Ngày đăng ký</th>
+                                <th>Trạng thái</th>
+                                <th class="text-end" style="width: 140px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${users}">
+                                <td>
+                                    <strong class="text-dark" th:text="${u.fullName}">Khách Hàng</strong>
+                                </td>
+                                <td class="text-secondary small font-monospace" th:text="${u.email}">email@domain.com</td>
+                                <td class="text-muted small" th:text="${u.phone != null ? u.phone : 'Chưa có'}">090...</td>
+                                <td class="text-muted small" th:text="${#temporals.format(u.createdAt, 'dd/MM/yyyy HH:mm')}">22/11/2026</td>
+                                <td>
+                                    <span class="badge bg-success" th:if="${u.active}">Hoạt động</span>
+                                    <span class="badge bg-danger" th:if="${!u.active}">Đã bị khóa</span>
+                                </td>
+                                <td class="text-end">
+                                    <form th:action="@{'/admin/users/' + ${u.userId} + '/toggle'}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm rounded-pill px-3" 
+                                                th:classappend="${u.active ? 'btn-outline-danger' : 'btn-outline-success'}"
+                                                th:text="${u.active ? 'Khóa' : 'Mở khóa'}">
+                                            Khóa
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                            <tr th:if="${#lists.isEmpty(users)}">
+                                <td colspan="6" class="text-center py-4 text-muted">Không tìm thấy khách hàng nào.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-4" th:if="${totalPages > 1}">
+                    <ul class="pagination pagination-sm justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/users(page=${currentPage - 1}, keyword=${keyword})}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/admin/users(page=${i}, keyword=${keyword})}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/users(page=${currentPage + 1}, keyword=${keyword})}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

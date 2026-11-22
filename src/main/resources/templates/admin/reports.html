@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#reportsAdminContent}, pageTitle='Báo Cáo Doanh Thu & Bán Hàng', activeNav='reports'}">
+        <div id="reportsAdminContent">
+
+            <!-- Revenue Summary Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
+                        <span class="text-muted small fw-bold text-uppercase">Doanh Thu Hôm Nay</span>
+                        <h3 class="fw-bold text-success mt-2 mb-1" 
+                            th:text="${#numbers.formatDecimal(stats.revenueToday, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</h3>
+                        <span class="small text-muted">Từ 00:00 hôm nay</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
+                        <span class="text-muted small fw-bold text-uppercase">Doanh Thu Tháng Này</span>
+                        <h3 class="fw-bold text-primary mt-2 mb-1" 
+                            th:text="${#numbers.formatDecimal(stats.revenueThisMonth, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</h3>
+                        <span class="small text-muted">Từ đầu tháng đến nay</span>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white text-center">
+                        <span class="text-muted small fw-bold text-uppercase">Tổng Doanh Thu Lũy Kế</span>
+                        <h3 class="fw-bold text-navy mt-2 mb-1" 
+                            th:text="${#numbers.formatDecimal(stats.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</h3>
+                        <span class="small text-muted">Chỉ tính đơn giao thành công (BR-15)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Status Breakdown -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3">Phân Bổ Đơn Hàng Theo Trạng Thái</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <span><i class="bi bi-clock text-warning me-2"></i> Chờ xác nhận (PENDING)</span>
+                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2" th:text="${stats.pendingOrders}">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <span><i class="bi bi-check2 text-info me-2"></i> Đã xác nhận (CONFIRMED)</span>
+                                <span class="badge bg-info rounded-pill px-3 py-2 text-white" th:text="${stats.confirmedOrders}">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <span><i class="bi bi-truck text-primary me-2"></i> Đang giao hàng (SHIPPING)</span>
+                                <span class="badge bg-primary rounded-pill px-3 py-2" th:text="${stats.shippingOrders}">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <span><i class="bi bi-check-circle-fill text-success me-2"></i> Giao thành công (DELIVERED)</span>
+                                <span class="badge bg-success rounded-pill px-3 py-2" th:text="${stats.deliveredOrders}">0</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                                <span><i class="bi bi-x-circle-fill text-danger me-2"></i> Đã hủy (CANCELLED)</span>
+                                <span class="badge bg-danger rounded-pill px-3 py-2" th:text="${stats.cancelledOrders}">0</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3">Top Sản Phẩm Doanh Số Cao Nhất</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th class="text-center">Số lượng bán</th>
+                                        <th class="text-end">Doanh số</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="bp : ${stats.bestSellingProducts}">
+                                        <td>
+                                            <strong class="text-dark small d-block" th:text="${bp.productName}">Tên SP</strong>
+                                        </td>
+                                        <td class="text-center fw-bold" th:text="${bp.totalQuantitySold}">10</td>
+                                        <td class="text-end fw-bold text-primary" 
+                                            th:text="${#numbers.formatDecimal(bp.totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                            0 đ
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(stats.bestSellingProducts)}">
+                                        <td colspan="3" class="text-center py-4 text-muted">Chưa có dữ liệu giao hàng thành công.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

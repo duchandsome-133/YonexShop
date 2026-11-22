@@ -1,0 +1,175 @@
+:root {
+    --yonex-navy: #002244;
+    --yonex-navy-dark: #001428;
+    --yonex-blue: #0066cc;
+    --yonex-cyan: #00b4d8;
+    --yonex-gold: #ffb703;
+    --yonex-red: #d90429;
+    --yonex-green: #2ec4b6;
+    --yonex-gray-bg: #f8fafc;
+    --yonex-border: #e2e8f0;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--yonex-gray-bg);
+    color: #1e293b;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar-yonex {
+    background: linear-gradient(135deg, var(--yonex-navy-dark) 0%, var(--yonex-navy) 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.brand-badge {
+    background: linear-gradient(90deg, #00b4d8, #0077b6);
+    color: white;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Hero Section */
+.hero-banner {
+    background: linear-gradient(rgba(0, 34, 68, 0.85), rgba(0, 20, 40, 0.95)),
+                url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1600&auto=format&fit=crop') center/cover;
+    color: white;
+    padding: 90px 0;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 34, 68, 0.2);
+}
+
+/* Product Cards */
+.product-card {
+    background: #ffffff;
+    border: 1px solid var(--yonex-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 24px rgba(0, 34, 68, 0.12);
+    border-color: var(--yonex-cyan);
+}
+
+.product-card .img-container {
+    height: 240px;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-card .img-container img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .img-container img {
+    transform: scale(1.05);
+}
+
+.badge-stock {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.price-tag {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--yonex-navy);
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+    background-color: var(--yonex-navy-dark);
+    min-height: 100vh;
+    color: #cbd5e1;
+}
+
+.admin-sidebar .nav-link {
+    color: #94a3b8;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin: 4px 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-sidebar .nav-link.active {
+    background: linear-gradient(90deg, var(--yonex-blue), var(--yonex-cyan));
+    color: white;
+}
+
+/* Status Badges */
+.status-badge {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.status-PENDING { background-color: #fef3c7; color: #b45309; }
+.status-CONFIRMED { background-color: #e0f2fe; color: #0369a1; }
+.status-SHIPPING { background-color: #ede9fe; color: #6d28d9; }
+.status-DELIVERED { background-color: #d1fae5; color: #047857; }
+.status-CANCELLED { background-color: #fee2e2; color: #b91c1c; }
+
+/* Buttons */
+.btn-yonex-primary {
+    background: linear-gradient(135deg, var(--yonex-navy) 0%, var(--yonex-blue) 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+.btn-yonex-primary:hover {
+    background: linear-gradient(135deg, var(--yonex-navy-dark) 0%, var(--yonex-navy) 100%);
+    color: white;
+}
+
+.btn-yonex-accent {
+    background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+.btn-yonex-accent:hover {
+    background: #0077b6;
+    color: white;
+}
+
+/* Footer */
+footer {
+    background-color: var(--yonex-navy-dark);
+    color: #94a3b8;
+    margin-top: auto;
+}

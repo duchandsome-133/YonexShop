@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/main :: html}" th:with="content=~{::#cartContent}">
+        <div id="cartContent" class="container my-4">
+
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Giỏ hàng của bạn</li>
+                </ol>
+            </nav>
+
+            <h3 class="fw-bold mb-4 text-navy"><i class="bi bi-cart3 me-2 text-primary"></i>Giỏ Hàng Mua Sắm</h3>
+
+            <div class="row g-4" th:if="${cart != null and not #lists.isEmpty(cart.items)}">
+                <!-- Items list -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-3">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="min-width: 250px;">Sản phẩm</th>
+                                        <th class="text-center" style="width: 140px;">Đơn giá</th>
+                                        <th class="text-center" style="width: 150px;">Số lượng</th>
+                                        <th class="text-end" style="width: 150px;">Thành tiền</th>
+                                        <th style="width: 60px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${cart.items}">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img th:src="${item.variant.product.primaryImageUrl}" th:alt="${item.variant.product.name}" 
+                                                     class="rounded p-1 border object-fit-contain" style="width: 64px; height: 64px;">
+                                                <div>
+                                                    <a th:href="@{'/products/' + ${item.variant.product.productId}}" 
+                                                       class="fw-semibold text-dark text-decoration-none d-block text-truncate" style="max-width: 260px;"
+                                                       th:text="${item.variant.product.name}">Vợt Yonex Astrox 100ZZ</a>
+                                                    <span class="badge bg-light text-secondary border small" th:text="${item.variant.variantName}">4UG5</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center text-muted small" 
+                                            th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                            4.250.000 đ
+                                        </td>
+                                        <td>
+                                            <form th:action="@{/cart/update}" method="post" class="d-flex align-items-center justify-content-center">
+                                                <input type="hidden" name="cartItemId" th:value="${item.cartItemId}">
+                                                <div class="input-group input-group-sm" style="width: 110px;">
+                                                    <button class="btn btn-outline-secondary" type="submit" name="quantity" th:value="${item.quantity - 1}">-</button>
+                                                    <input type="text" class="form-control text-center fw-bold bg-white" th:value="${item.quantity}" readonly>
+                                                    <button class="btn btn-outline-secondary" type="submit" name="quantity" th:value="${item.quantity + 1}">+</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="text-end fw-bold text-primary" 
+                                            th:text="${#numbers.formatDecimal(item.lineTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                            4.250.000 đ
+                                        </td>
+                                        <td class="text-center">
+                                            <form th:action="@{'/cart/remove/' + ${item.cartItemId}}" method="post">
+                                                <button type="submit" class="btn btn-link text-danger p-0" title="Xóa khỏi giỏ">
+                                                    <i class="bi bi-trash3 fs-5"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/products}" class="btn btn-outline-secondary rounded-pill btn-sm px-4">
+                            <i class="bi bi-arrow-left me-1"></i> Tiếp tục xem sản phẩm
+                        </a>
+                        <form th:action="@{/cart/clear}" method="post">
+                            <button type="submit" class="btn btn-outline-danger rounded-pill btn-sm px-4">
+                                <i class="bi bi-trash me-1"></i> Xóa toàn bộ giỏ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 90px;">
+                        <h5 class="fw-bold mb-3 text-navy">Tóm Tắt Đơn Hàng</h5>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Tổng tiền hàng:</span>
+                            <strong class="text-dark" th:text="${#numbers.formatDecimal(cart.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</strong>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Phí vận chuyển dự kiến:</span>
+                            <span class="text-success small fw-semibold" th:if="${cart.totalAmount >= 1000000}">Miễn phí vận chuyển</span>
+                            <span class="text-dark small" th:if="${cart.totalAmount < 1000000}">30.000 đ</span>
+                        </div>
+
+                        <div class="alert alert-info py-2 px-3 small rounded-3 my-3">
+                            <i class="bi bi-info-circle me-1"></i> Miễn phí giao hàng toàn quốc cho đơn hàng từ <strong>1.000.000 đ</strong>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between align-items-baseline mb-4">
+                            <span class="fw-bold">Tạm tính:</span>
+                            <span class="fs-4 fw-bold text-primary" 
+                                  th:text="${#numbers.formatDecimal(cart.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                0 đ
+                            </span>
+                        </div>
+
+                        <div class="d-grid">
+                            <a th:href="@{/checkout}" class="btn btn-yonex-primary btn-lg rounded-pill py-3">
+                                Tiến Hành Thanh Toán COD <i class="bi bi-arrow-right ms-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Cart -->
+            <div class="card border-0 shadow-sm text-center p-5 rounded-4 bg-white" th:if="${cart == null or #lists.isEmpty(cart.items)}">
+                <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
+                <h4 class="fw-bold">Giỏ hàng của bạn đang trống</h4>
+                <p class="text-muted">Hãy lựa chọn các phụ kiện và dụng cụ thể thao Yonex yêu thích của bạn.</p>
+                <div class="mt-3">
+                    <a th:href="@{/products}" class="btn btn-yonex-primary rounded-pill px-4 py-2">
+                        <i class="bi bi-bag-plus me-1"></i> Khám phá sản phẩm ngay
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

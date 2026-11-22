@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/main :: html}" th:with="content=~{::#homeContent}">
+        <div id="homeContent">
+            <!-- Hero Banner -->
+            <div class="container my-4">
+                <div class="hero-banner p-4 p-md-5 text-center text-md-start">
+                    <div class="row align-items-center">
+                        <div class="col-lg-7">
+                            <span class="badge bg-info text-dark mb-3 px-3 py-2 fw-bold text-uppercase tracking-wider">Bộ Sưu Tập Yonex 2026</span>
+                            <h1 class="display-4 fw-bold mb-3 text-white">FAR BEYOND ORDINARY</h1>
+                            <p class="lead mb-4 text-light">
+                                Trải nghiệm đỉnh cao công nghệ vợt Astrox, Nanoflare cùng giày Power Cushion+ thế hệ mới. Đảm bảo sức mạnh, tốc độ và sự ổn định tuyệt đối trên từng đường cầu.
+                            </p>
+                            <div class="d-flex gap-3 justify-content-center justify-content-md-start">
+                                <a th:href="@{/products}" class="btn btn-yonex-accent btn-lg rounded-pill px-4">
+                                    <i class="bi bi-cart3 me-2"></i>Mua sắm ngay
+                                </a>
+                                <a th:href="@{/categories/vot-cau-long}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                                    Vợt Cầu Lông
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Fast Access -->
+            <div class="container my-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h3 class="fw-bold mb-0 text-navy"><i class="bi bi-grid-fill me-2 text-primary"></i>Danh Mục Sản Phẩm</h3>
+                    <a th:href="@{/products}" class="text-decoration-none fw-semibold">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-6 col-md-4 col-lg-2" th:each="cat : ${activeCategories}">
+                        <a th:href="@{'/categories/' + ${cat.slug}}" class="text-decoration-none">
+                            <div class="card border-0 shadow-sm text-center p-3 h-100 hover-shadow transition-all">
+                                <div class="fs-1 text-primary mb-2">
+                                    <i class="bi bi-trophy" th:if="${cat.slug.contains('vot')}"></i>
+                                    <i class="bi bi-lightning-charge" th:if="${cat.slug.contains('giay')}"></i>
+                                    <i class="bi bi-backpack" th:if="${cat.slug.contains('balo')}"></i>
+                                    <i class="bi bi-activity" th:if="${cat.slug.contains('day-cuoc')}"></i>
+                                    <i class="bi bi-person-arms-up" th:if="${cat.slug.contains('quan-ao')}"></i>
+                                    <i class="bi bi-shield" th:if="${cat.slug.contains('phu-kien')}"></i>
+                                </div>
+                                <h6 class="fw-bold text-dark mb-0 small" th:text="${cat.name}">Vợt Cầu Lông</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Products -->
+            <div class="container my-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="fw-bold mb-1 text-navy"><i class="bi bi-star-fill text-warning me-2"></i>Sản Phẩm Nổi Bật</h3>
+                        <p class="text-muted small mb-0">Các dòng phụ kiện và dụng cụ Yonex bán chạy nhất</p>
+                    </div>
+                    <a th:href="@{/products}" class="btn btn-outline-primary rounded-pill btn-sm px-3">Tất cả sản phẩm</a>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3" th:each="p : ${featuredProducts}">
+                        <div class="product-card">
+                            <div class="img-container">
+                                <span class="badge badge-stock bg-success text-white" th:if="${p.totalAvailableQuantity > 0}">
+                                    Còn hàng
+                                </span>
+                                <span class="badge badge-stock bg-danger text-white" th:if="${p.totalAvailableQuantity <= 0}">
+                                    Tạm hết hàng
+                                </span>
+                                <img th:src="${p.primaryImageUrl}" th:alt="${p.name}">
+                            </div>
+                            <div class="p-3 d-flex flex-column flex-grow-1">
+                                <div class="text-muted small mb-1" th:text="${p.category.name}">Vợt Cầu Lông</div>
+                                <h6 class="fw-bold text-truncate-2 mb-2" style="min-height: 2.5rem;">
+                                    <a th:href="@{'/products/' + ${p.productId}}" class="text-dark text-decoration-none" th:text="${p.name}">
+                                        Vợt Cầu Lông Yonex Astrox 100ZZ
+                                    </a>
+                                </h6>
+                                <div class="mt-auto">
+                                    <div class="d-flex align-items-baseline justify-content-between mb-3">
+                                        <span class="price-tag" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">4.250.000 đ</span>
+                                    </div>
+                                    <a th:href="@{'/products/' + ${p.productId}}" class="btn btn-yonex-primary w-100 rounded-pill btn-sm py-2">
+                                        <i class="bi bi-eye me-1"></i> Xem chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yonex Technology & Service Commitments -->
+            <div class="container my-5 py-4 border-top">
+                <div class="row g-4 text-center">
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold">100% Chính Hãng Yonex</h5>
+                            <p class="text-muted small">Cam kết phân phối chính ngạch, có tem chống hàng giả và chế độ bảo hành chuẩn hãng.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <i class="bi bi-truck fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold">Giao Hàng COD Toàn Quốc</h5>
+                            <p class="text-muted small">Kiểm tra sản phẩm trước khi thanh toán. Miễn phí vận chuyển cho đơn hàng từ 1.000.000đ.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <i class="bi bi-arrow-repeat fs-1 text-primary mb-3"></i>
+                            <h5 class="fw-bold">Đổi Trả Uy Tín 7 Ngày</h5>
+                            <p class="text-muted small">Hỗ trợ đổi size giày, đổi mẫu linh hoạt và nhanh chóng nếu chưa qua sử dụng.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

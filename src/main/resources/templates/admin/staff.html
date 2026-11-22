@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#staffAdminContent}, pageTitle='Quản Lý Nhân Viên', activeNav='staff'}">
+        <div id="staffAdminContent">
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold text-navy mb-0">Danh Sách Nhân Viên Hệ Thống (Staff)</h5>
+                        <p class="text-muted small mb-0">Nhân viên có quyền truy cập xử lý đơn hàng và điều chỉnh tồn kho</p>
+                    </div>
+                    <button type="button" class="btn btn-yonex-primary rounded-pill btn-sm px-4" data-bs-toggle="modal" data-bs-target="#newStaffModal">
+                        <i class="bi bi-person-plus me-1"></i> Tạo tài khoản nhân viên
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Họ và tên</th>
+                                <th>Email đăng nhập</th>
+                                <th>Số điện thoại</th>
+                                <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                                <th class="text-end" style="width: 140px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${staffs}">
+                                <td>
+                                    <strong class="text-dark" th:text="${s.fullName}">Tên nhân viên</strong>
+                                </td>
+                                <td class="text-secondary small font-monospace" th:text="${s.email}">staff@domain.com</td>
+                                <td class="text-muted small" th:text="${s.phone}">091...</td>
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${s.role.roleName}">ROLE_STAFF</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success" th:if="${s.active}">Hoạt động</span>
+                                    <span class="badge bg-danger" th:if="${!s.active}">Đã khóa</span>
+                                </td>
+                                <td class="text-end">
+                                    <form th:action="@{'/admin/users/' + ${s.userId} + '/toggle'}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm rounded-pill px-3" 
+                                                th:classappend="${s.active ? 'btn-outline-danger' : 'btn-outline-success'}"
+                                                th:text="${s.active ? 'Khóa' : 'Mở'}">
+                                            Khóa
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal Add Staff -->
+            <div class="modal fade" id="newStaffModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <form th:action="@{/admin/staff/create}" th:object="${staffRequest}" method="post">
+                        <div class="modal-content rounded-4 border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-navy">Tạo Tài Khoản Nhân Viên Mới</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body py-3">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Họ và tên nhân viên <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{fullName}" placeholder="Nguyễn Văn Nhân Viên" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Email đăng nhập <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control" th:field="*{email}" placeholder="staff@yonexshop.vn" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Số điện thoại <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{phone}" placeholder="0912345678" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Mật khẩu khởi tạo <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" th:field="*{password}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                                    <input type="password" class="form-control" th:field="*{confirmPassword}" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-yonex-primary rounded-pill px-4">Tạo tài khoản</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

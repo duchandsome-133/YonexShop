@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/main :: html}" th:with="content=~{::#profileContent}">
+        <div id="profileContent" class="container my-4">
+
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Hồ sơ cá nhân</li>
+                </ol>
+            </nav>
+
+            <div class="row g-4">
+                <!-- User Information Form -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                        <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-person me-2 text-primary"></i>Thông Tin Cá Nhân</h5>
+
+                        <form th:action="@{/profile/update}" th:object="${profileRequest}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Địa chỉ Email (Định danh):</label>
+                                <input type="email" class="form-control bg-light" th:value="${user.email}" readonly disabled>
+                                <div class="form-text small">Email không thể thay đổi sau khi đăng ký.</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Họ và tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" th:field="*{fullName}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" th:field="*{phone}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn-yonex-primary rounded-pill px-4">
+                                Lưu thay đổi thông tin
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Change Password Form -->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                        <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-key me-2 text-primary"></i>Đổi Mật Khẩu</h5>
+
+                        <form th:action="@{/profile/change-password}" th:object="${passwordRequest}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Mật khẩu hiện tại <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" th:field="*{currentPassword}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Mật khẩu mới <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" th:field="*{newPassword}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label small fw-bold">Xác nhận mật khẩu mới <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" th:field="*{confirmNewPassword}" required>
+                                <div class="text-danger small" th:if="${#fields.hasErrors('confirmNewPassword')}" th:errors="*{confirmNewPassword}"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-primary rounded-pill px-4">
+                                Cập nhật mật khẩu
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#categoriesAdminContent}, pageTitle='Quản Lý Danh Mục', activeNav='categories'}">
+        <div id="categoriesAdminContent">
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="fw-bold text-navy mb-0">Danh Sách Danh Mục Sản Phẩm</h5>
+                    <button type="button" class="btn btn-yonex-primary rounded-pill btn-sm px-4" data-bs-toggle="modal" data-bs-target="#categoryModal" onclick="prepareCreateCategory()">
+                        <i class="bi bi-plus-lg me-1"></i> Thêm danh mục mới
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Tên danh mục</th>
+                                <th>Đường dẫn tĩnh (Slug)</th>
+                                <th>Số sản phẩm</th>
+                                <th>Mô tả</th>
+                                <th>Trạng thái</th>
+                                <th class="text-end" style="width: 140px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cat : ${categories}">
+                                <td class="fw-bold text-muted small" th:text="${cat.categoryId}">1</td>
+                                <td class="fw-bold text-dark" th:text="${cat.name}">Vợt Cầu Lông</td>
+                                <td class="text-secondary small font-monospace" th:text="${cat.slug}">vot-cau-long</td>
+                                <td>
+                                    <span class="badge bg-light text-primary border" th:text="${#lists.size(cat.products)} + ' sản phẩm'">5 sản phẩm</span>
+                                </td>
+                                <td class="text-muted small" th:text="${cat.description}">Mô tả...</td>
+                                <td>
+                                    <span class="badge bg-success" th:if="${cat.active}">Hoạt động</span>
+                                    <span class="badge bg-secondary" th:if="${!cat.active}">Đang ẩn</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                                th:data-id="${cat.categoryId}"
+                                                th:data-name="${cat.name}"
+                                                th:data-slug="${cat.slug}"
+                                                th:data-desc="${cat.description}"
+                                                th:data-active="${cat.active}"
+                                                onclick="prepareEditCategory(this)">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <form th:action="@{'/admin/categories/toggle/' + ${cat.categoryId}}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-sm" th:classappend="${cat.active ? 'btn-outline-warning' : 'btn-outline-success'}">
+                                                <i class="bi" th:classappend="${cat.active ? 'bi-eye-slash' : 'bi-eye'}"></i>
+                                            </button>
+                                        </form>
+                                        <form th:action="@{'/admin/categories/delete/' + ${cat.categoryId}}" method="post" class="d-inline"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa/ẩn danh mục này?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal Add / Edit Category -->
+            <div class="modal fade" id="categoryModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <form id="categoryForm" th:action="@{/admin/categories/create}" th:object="${categoryRequest}" method="post">
+                        <div class="modal-content rounded-4 border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-navy" id="categoryModalTitle">Thêm Danh Mục Mới</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body py-3">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Tên danh mục <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" th:field="*{name}" id="catName" placeholder="Ví dụ: Vợt Cầu Lông" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Đường dẫn tĩnh (Slug - Để trống để tự sinh)</label>
+                                    <input type="text" class="form-control" th:field="*{slug}" id="catSlug" placeholder="vot-cau-long">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Mô tả</label>
+                                    <textarea class="form-control" th:field="*{description}" id="catDesc" rows="3"></textarea>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" th:field="*{active}" id="catActive" checked>
+                                    <label class="form-check-label small" for="catActive">Đang hoạt động</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-yonex-primary rounded-pill px-4">Lưu danh mục</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function prepareCreateCategory() {
+                document.getElementById('categoryModalTitle').innerText = 'Thêm Danh Mục Mới';
+                document.getElementById('categoryForm').action = '/admin/categories/create';
+                document.getElementById('catName').value = '';
+                document.getElementById('catSlug').value = '';
+                document.getElementById('catDesc').value = '';
+                document.getElementById('catActive').checked = true;
+            }
+
+            function prepareEditCategory(btn) {
+                document.getElementById('categoryModalTitle').innerText = 'Chỉnh Sửa Danh Mục';
+                document.getElementById('categoryForm').action = '/admin/categories/update/' + btn.dataset.id;
+                document.getElementById('catName').value = btn.dataset.name;
+                document.getElementById('catSlug').value = btn.dataset.slug;
+                document.getElementById('catDesc').value = btn.dataset.desc;
+                document.getElementById('catActive').checked = btn.dataset.active === 'true';
+                new bootstrap.Modal(document.getElementById('categoryModal')).show();
+            }
+        </script>
+    </div>
+</body>
+</html>

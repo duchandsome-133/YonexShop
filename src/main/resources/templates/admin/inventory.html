@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#inventoryAdminContent}, pageTitle='Quản Lý Tồn Kho', activeNav='inventory'}">
+        <div id="inventoryAdminContent">
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h5 class="fw-bold text-navy mb-0">Tồn Kho Biến Thể Sản Phẩm</h5>
+                        <p class="text-muted small mb-0">Theo dõi số lượng sẵn sàng bán và lịch sử điều chỉnh kho</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Biến thể / Quy cách</th>
+                                <th>Mã SKU</th>
+                                <th>Màu sắc / Kích cỡ</th>
+                                <th class="text-center">Số lượng tồn</th>
+                                <th>Cập nhật lúc</th>
+                                <th class="text-end" style="width: 140px;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="v : ${variants}">
+                                <td>
+                                    <strong class="text-dark" th:text="${v.product.name}">Tên sản phẩm</strong>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-secondary border" th:text="${v.variantName}">4UG5</span>
+                                </td>
+                                <td class="small fw-bold text-dark" th:text="${v.sku}">SKU</td>
+                                <td class="small text-muted" th:text="${(v.color != null ? v.color : '') + ' ' + (v.size != null ? v.size : '')}">Đỏ / 4UG5</td>
+                                <td class="text-center">
+                                    <span class="badge px-3 py-2 fs-6" 
+                                          th:classappend="${v.availableQuantity > 10 ? 'bg-success' : (v.availableQuantity > 0 ? 'bg-warning text-dark' : 'bg-danger')}"
+                                          th:text="${v.availableQuantity} + ' cái'">
+                                        10 cái
+                                    </span>
+                                </td>
+                                <td class="small text-muted" 
+                                    th:text="${v.inventory != null ? #temporals.format(v.inventory.updatedAt, 'dd/MM/yyyy HH:mm') : 'Chưa có'}">
+                                    22/11/2026
+                                </td>
+                                <td class="text-end">
+                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                            th:data-id="${v.variantId}"
+                                            th:data-name="${v.product.name + ' (' + v.variantName + ')'}"
+                                            th:data-qty="${v.availableQuantity}"
+                                            onclick="prepareStockAdjust(this)">
+                                        <i class="bi bi-pencil-square me-1"></i> Điều chỉnh
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <nav class="mt-4" th:if="${totalPages > 1}">
+                    <ul class="pagination pagination-sm justify-content-center">
+                        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/inventory(page=${currentPage - 1})}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/admin/inventory(page=${i})}" th:text="${i + 1}">1</a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/inventory(page=${currentPage + 1})}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Modal Adjust Stock -->
+            <div class="modal fade" id="adjustStockModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <form th:action="@{/admin/inventory/adjust}" method="post">
+                        <input type="hidden" name="variantId" id="adjustVariantId">
+
+                        <div class="modal-content rounded-4 border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-navy">Điều Chỉnh Tồn Kho</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body py-3">
+                                <p class="small text-muted mb-2" id="adjustVariantName">Sản phẩm</p>
+                                <p class="small mb-3">Tồn kho hiện tại: <strong class="text-primary" id="currentStockDisplay">0</strong> cái</p>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Số lượng thay đổi (+ để nhập kho, - để xuất bớt):</label>
+                                    <input type="number" name="changeQuantity" class="form-control" placeholder="Ví dụ: 10 hoặc -5" required>
+                                    <div class="form-text small">Ví dụ: Điền 20 để nhập thêm 20 sản phẩm vào kho.</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Lý do điều chỉnh kho <span class="text-danger">*</span></label>
+                                    <input type="text" name="reason" class="form-control" placeholder="Ví dụ: Nhập hàng mới từ hãng Yonex, Kiểm kê kho..." required>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-yonex-primary rounded-pill px-4">Lưu thay đổi</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function prepareStockAdjust(btn) {
+                document.getElementById('adjustVariantId').value = btn.dataset.id;
+                document.getElementById('adjustVariantName').innerText = 'Biến thể: ' + btn.dataset.name;
+                document.getElementById('currentStockDisplay').innerText = btn.dataset.qty;
+                new bootstrap.Modal(document.getElementById('adjustStockModal')).show();
+            }
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <div th:replace="~{layout/main :: html}" th:with="content=~{::#orderDetailContent}">
+        <div id="orderDetailContent" class="container my-4">
+
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/orders}" class="text-decoration-none">Đơn hàng của tôi</a></li>
+                    <li class="breadcrumb-item active" aria-current="page" th:text="'#' + ${order.orderCode}">#YNX123</li>
+                </ol>
+            </nav>
+
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1 text-navy" th:text="'Chi Tiết Đơn Hàng #' + ${order.orderCode}">Chi Tiết Đơn Hàng</h3>
+                    <span class="text-muted small" th:text="'Ngày đặt hàng: ' + ${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm:ss')}">22/11/2026</span>
+                </div>
+                <div>
+                    <span class="status-badge fs-6" th:classappend="'status-' + ${order.orderStatus.name()}" 
+                          th:text="${order.orderStatus.displayName}">Chờ xác nhận</span>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Items list -->
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                        <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-box-seam me-2 text-primary"></i>Danh Sách Sản Phẩm Đặt Mua</h5>
+
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th class="text-center">Đơn giá</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-end">Thành tiền</th>
+                                        <th class="text-center" th:if="${order.orderStatus.name() == 'DELIVERED'}">Đánh giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${order.items}">
+                                        <td>
+                                            <strong class="text-dark d-block" th:text="${item.productNameSnapshot}">Tên SP</strong>
+                                            <span class="text-muted small" th:text="'Mã SKU: ' + ${item.skuSnapshot}">SKU</span>
+                                        </td>
+                                        <td class="text-center text-muted" 
+                                            th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                            0 đ
+                                        </td>
+                                        <td class="text-center fw-bold" th:text="${item.quantity}">1</td>
+                                        <td class="text-end fw-bold text-primary" 
+                                            th:text="${#numbers.formatDecimal(item.lineTotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                            0 đ
+                                        </td>
+                                        <td class="text-center" th:if="${order.orderStatus.name() == 'DELIVERED'}">
+                                            <button type="button" class="btn btn-sm btn-outline-warning rounded-pill"
+                                                    data-bs-toggle="modal" data-bs-target="#reviewModal"
+                                                    th:data-product-id="${item.product != null ? item.product.productId : ''}"
+                                                    th:data-product-name="${item.productNameSnapshot}"
+                                                    onclick="prepareReviewModal(this)"
+                                                    th:if="${item.product != null}">
+                                                <i class="bi bi-star me-1"></i> Đánh giá
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Cancel Order Action (Only if PENDING) -->
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white" th:if="${order.canCancel()}">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="fw-bold text-danger mb-1"><i class="bi bi-x-circle me-1"></i> Hủy Đơn Hàng Này?</h6>
+                                <p class="text-muted small mb-0">Bạn chỉ có thể tự hủy đơn khi đơn hàng đang ở trạng thái 'Chờ xác nhận'.</p>
+                            </div>
+                            <button type="button" class="btn btn-outline-danger rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#cancelModal">
+                                Hủy đơn hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipping and Payment summary -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                        <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-truck me-2 text-primary"></i>Thông Tin Giao Hàng</h5>
+                        <p class="mb-1 fw-bold text-dark" th:text="${order.recipientName}">Nguyễn Văn Khách</p>
+                        <p class="mb-1 text-muted small"><i class="bi bi-telephone me-1"></i> <span th:text="${order.recipientPhone}">0987654321</span></p>
+                        <p class="text-secondary small mb-2"><i class="bi bi-geo-alt me-1"></i> <span th:text="${order.shippingAddress}">Địa chỉ</span></p>
+
+                        <div th:if="${order.note != null and !order.note.isBlank()}" class="mt-2 p-2 bg-light rounded small text-muted">
+                            <strong>Ghi chú:</strong> <span th:text="${order.note}">Ghi chú</span>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                        <h5 class="fw-bold mb-3 text-navy"><i class="bi bi-cash-stack me-2 text-success"></i>Thanh Toán (COD)</h5>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Tiền hàng:</span>
+                            <span class="text-dark" th:text="${#numbers.formatDecimal(order.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Phí ship:</span>
+                            <span class="text-success fw-semibold" th:if="${order.shippingFee == 0}">Miễn phí</span>
+                            <span class="text-dark" th:if="${order.shippingFee > 0}" th:text="${#numbers.formatDecimal(order.shippingFee, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Phương thức:</span>
+                            <span class="fw-semibold">Thanh toán khi nhận hàng (COD)</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="text-muted">Trạng thái TT:</span>
+                            <span class="badge bg-light text-dark border" th:text="${order.paymentStatus == 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'}">Chưa thanh toán</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between align-items-baseline mb-0">
+                            <span class="fw-bold fs-5">Tổng cộng:</span>
+                            <span class="fs-4 fw-bold text-primary" 
+                                  th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+                                0 đ
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancel Modal -->
+            <div class="modal fade" id="cancelModal" tabindex="-1" th:if="${order.canCancel()}">
+                <div class="modal-dialog">
+                    <form th:action="@{'/orders/' + ${order.orderId} + '/cancel'}" method="post">
+                        <div class="modal-content rounded-4 border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-danger">Xác Nhận Hủy Đơn Hàng</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body py-3">
+                                <p>Bạn có chắc chắn muốn hủy đơn hàng <strong>#<span th:text="${order.orderCode}"></span></strong> không?</p>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Lý do hủy đơn (tùy chọn):</label>
+                                    <textarea name="reason" class="form-control" rows="2" placeholder="Ví dụ: Đổi ý, muốn đổi địa chỉ nhận hàng..."></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-danger rounded-pill px-4">Đồng ý hủy</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Review Modal (FR-14) -->
+            <div class="modal fade" id="reviewModal" tabindex="-1" th:if="${order.orderStatus.name() == 'DELIVERED'}">
+                <div class="modal-dialog">
+                    <form th:action="@{/reviews/add}" method="post">
+                        <input type="hidden" name="orderId" th:value="${order.orderId}">
+                        <input type="hidden" name="productId" id="reviewProductId">
+
+                        <div class="modal-content rounded-4 border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-navy">Đánh Giá Sản Phẩm</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body py-3">
+                                <p class="text-muted small mb-3" id="reviewProductName"></p>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small">Đánh giá số sao:</label>
+                                    <select class="form-select" name="rating" required>
+                                        <option value="5">⭐⭐⭐⭐⭐ (5 sao - Xuất sắc)</option>
+                                        <option value="4">⭐⭐⭐⭐ (4 sao - Rất tốt)</option>
+                                        <option value="3">⭐⭐⭐ (3 sao - Bình thường)</option>
+                                        <option value="2">⭐⭐ (2 sao - Chưa hài lòng)</option>
+                                        <option value="1">⭐ (1 sao - Kém)</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small">Nhận xét của bạn:</label>
+                                    <textarea name="comment" class="form-control" rows="3" 
+                                              placeholder="Chia sẻ cảm nhận về chất lượng, độ bền, trải nghiệm chơi cầu lông..."></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-yonex-primary rounded-pill px-4">Gửi đánh giá</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            function prepareReviewModal(btn) {
+                document.getElementById('reviewProductId').value = btn.dataset.productId;
+                document.getElementById('reviewProductName').innerText = 'Sản phẩm: ' + btn.dataset.productName;
+            }
+        </script>
+    </div>
+</body>
+</html>
