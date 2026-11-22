@@ -1,7 +1,7 @@
 -- ========================================================
 -- Migration: V1__init_schema.sql
 -- Description: Create initial schema for Yonex Sports Shop
--- Target DB: Microsoft SQL Server
+-- Target DB: Microsoft SQL Server (Cycle-safe Foreign Keys)
 -- ========================================================
 
 -- 1. Roles table
@@ -105,7 +105,7 @@ CREATE TABLE InventoryTransactions (
     ReferenceId NVARCHAR(100) NULL,
     CreatedBy NVARCHAR(150) NULL,
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_InventoryTransactions_ProductVariants FOREIGN KEY (VariantId) REFERENCES ProductVariants(VariantId)
+    CONSTRAINT FK_InventoryTransactions_ProductVariants FOREIGN KEY (VariantId) REFERENCES ProductVariants(VariantId) ON DELETE NO ACTION
 );
 
 -- 10. Carts table (1 active cart per user)
@@ -125,7 +125,7 @@ CREATE TABLE CartItems (
     Quantity INT NOT NULL CHECK (Quantity > 0),
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     CONSTRAINT FK_CartItems_Carts FOREIGN KEY (CartId) REFERENCES Carts(CartId) ON DELETE CASCADE,
-    CONSTRAINT FK_CartItems_ProductVariants FOREIGN KEY (VariantId) REFERENCES ProductVariants(VariantId),
+    CONSTRAINT FK_CartItems_ProductVariants FOREIGN KEY (VariantId) REFERENCES ProductVariants(VariantId) ON DELETE NO ACTION,
     CONSTRAINT UQ_Cart_Variant UNIQUE (CartId, VariantId)
 );
 
@@ -162,8 +162,8 @@ CREATE TABLE OrderItems (
     Quantity INT NOT NULL CHECK (Quantity > 0),
     LineTotal DECIMAL(18,2) NOT NULL CHECK (LineTotal >= 0),
     CONSTRAINT FK_OrderItems_Orders FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,
-    CONSTRAINT FK_OrderItems_Products FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE SET NULL,
-    CONSTRAINT FK_OrderItems_ProductVariants FOREIGN KEY (VariantId) REFERENCES ProductVariants(VariantId) ON DELETE SET NULL
+    CONSTRAINT FK_OrderItems_Products FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE NO ACTION,
+    CONSTRAINT FK_OrderItems_ProductVariants FOREIGN KEY (VariantId) REFERENCES ProductVariants(VariantId) ON DELETE NO ACTION
 );
 
 -- 14. Reviews table
@@ -176,9 +176,9 @@ CREATE TABLE Reviews (
     Comment NVARCHAR(1000) NULL,
     IsVisible BIT NOT NULL DEFAULT 1,
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserId) REFERENCES Users(UserId),
-    CONSTRAINT FK_Reviews_Products FOREIGN KEY (ProductId) REFERENCES Products(ProductId),
-    CONSTRAINT FK_Reviews_Orders FOREIGN KEY (OrderId) REFERENCES Orders(OrderId),
+    CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE NO ACTION,
+    CONSTRAINT FK_Reviews_Products FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE NO ACTION,
+    CONSTRAINT FK_Reviews_Orders FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE NO ACTION,
     CONSTRAINT UQ_User_Product_Order UNIQUE (UserId, ProductId, OrderId)
 );
 
