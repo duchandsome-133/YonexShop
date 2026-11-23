@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#orderDetailAdminContent}, pageTitle='Chi Tiết Đơn Hàng #' + ${order.orderCode}, activeNav='orders'}">
+    <div th:replace="~{layout/admin :: adminLayout(~{::#orderDetailAdminContent}, 'orders')}">
         <div id="orderDetailAdminContent">
 
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -142,3 +142,4 @@
     </div>
 </body>
 </html>
+

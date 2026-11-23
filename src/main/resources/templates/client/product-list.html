@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/main :: html}" th:with="content=~{::#productListContent}">
+    <div th:replace="~{layout/main :: mainLayout(~{::#productListContent})}">
         <div id="productListContent" class="container my-4">
 
             <!-- Breadcrumbs -->
@@ -64,11 +64,11 @@
                                 </select>
                             </div>
 
-                            <button type="submit" class="btn btn-yonex-primary w-100 rounded-pill btn-sm py-2">
-                                <i class="bi bi-filter me-1"></i> Áp dụng bộ lọc
+                            <button type="submit" class="btn btn-yonex-primary w-100 rounded-1 btn-sm py-2">
+                                <i class="bi bi-filter me-1"></i> Áp Dụng Bộ Lọc
                             </button>
-                            <a th:href="@{/products}" class="btn btn-light w-100 rounded-pill btn-sm py-2 mt-2">
-                                Xóa bộ lọc
+                            <a th:href="@{/products}" class="btn btn-outline-dark w-100 rounded-1 btn-sm py-2 mt-2">
+                                Xóa Bộ Lọc
                             </a>
                         </form>
                     </div>
@@ -108,8 +108,8 @@
                                         <div class="d-flex align-items-baseline justify-content-between mb-3">
                                             <span class="price-tag" th:text="${#numbers.formatDecimal(p.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
                                         </div>
-                                        <a th:href="@{'/products/' + ${p.productId}}" class="btn btn-yonex-primary w-100 rounded-pill btn-sm py-2">
-                                            <i class="bi bi-eye me-1"></i> Xem chi tiết
+                                        <a th:href="@{'/products/' + ${p.productId}}" class="btn btn-yonex-primary w-100 rounded-1 btn-sm py-2">
+                                            <i class="bi bi-eye me-1"></i> Xem Chi Tiết
                                         </a>
                                     </div>
                                 </div>
@@ -152,3 +152,4 @@
     </div>
 </body>
 </html>
+

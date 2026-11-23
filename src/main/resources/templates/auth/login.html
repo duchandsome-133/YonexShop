@@ -4,49 +4,63 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/main :: html}" th:with="content=~{::#loginContent}">
+    <div th:replace="~{layout/main :: mainLayout(~{::#loginContent})}">
         <div id="loginContent" class="container my-5">
             <div class="row justify-content-center">
                 <div class="col-md-6 col-lg-5">
-                    <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white">
+                    <div class="card border rounded-1 shadow-sm p-4 p-md-5 bg-white">
                         <div class="text-center mb-4">
-                            <span class="brand-badge fs-6 px-3 py-1">YONEX</span>
-                            <h3 class="fw-bold mt-3 text-navy">Đăng Nhập</h3>
-                            <p class="text-muted small">Đăng nhập tài khoản để quản lý đơn hàng và giỏ hàng</p>
+                            <div class="d-inline-flex align-items-center gap-2 mb-2">
+                                <div class="yy-logo-badge">
+                                    <span class="yy-circle green">Y</span>
+                                    <span class="yy-circle blue">Y</span>
+                                </div>
+                                <span class="yonex-wordmark">YONEX</span>
+                            </div>
+                            <h4 class="fw-bold text-uppercase mt-2">Đăng Nhập Tài Khoản</h4>
+                            <p class="text-muted small">Đăng nhập để theo dõi đơn hàng, quản lý địa chỉ và mua sắm nhanh chóng</p>
                         </div>
 
-                        <!-- Login Form -->
+                        <!-- Login Form Alerts -->
+                        <div th:if="${param.error}" class="alert alert-danger py-2 small mb-3 rounded-1">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Email hoặc mật khẩu không chính xác!
+                        </div>
+                        <div th:if="${param.logout}" class="alert alert-success py-2 small mb-3 rounded-1">
+                            <i class="bi bi-check-circle-fill me-1"></i> Bạn đã đăng xuất thành công!
+                        </div>
+
+                        <!-- Form -->
                         <form th:action="@{/login}" method="post">
                             <div class="mb-3">
-                                <label class="form-label small fw-bold">Địa chỉ Email</label>
+                                <label class="form-label small fw-bold text-uppercase text-muted">Địa chỉ Email</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
-                                    <input type="email" name="email" class="form-control border-start-0" placeholder="name@example.com" required autofocus>
+                                    <span class="input-group-text bg-light rounded-1 border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                                    <input type="email" name="email" class="form-control rounded-1 border-start-0" placeholder="name@example.com" required autofocus>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label small fw-bold">Mật khẩu</label>
+                                <label class="form-label small fw-bold text-uppercase text-muted">Mật khẩu</label>
                                 <div class="input-group">
-                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
-                                    <input type="password" name="password" class="form-control border-start-0" placeholder="••••••••" required>
+                                    <span class="input-group-text bg-light rounded-1 border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                                    <input type="password" name="password" class="form-control rounded-1 border-start-0" placeholder="••••••••" required>
                                 </div>
                             </div>
 
                             <div class="d-grid mb-3">
-                                <button type="submit" class="btn btn-yonex-primary btn-lg rounded-pill py-2">
+                                <button type="submit" class="btn btn-yonex-primary py-2 text-uppercase">
                                     Đăng Nhập
                                 </button>
                             </div>
 
                             <div class="text-center small text-muted">
-                                Chưa có tài khoản? <a th:href="@{/register}" class="text-primary fw-semibold text-decoration-none">Đăng ký ngay</a>
+                                Chưa có tài khoản? <a th:href="@{/register}" class="text-primary fw-bold text-decoration-none">Đăng ký ngay</a>
                             </div>
                         </form>
 
                         <!-- Demo credentials badge for easy testing -->
-                        <div class="mt-4 p-3 bg-light rounded-3 small border">
-                            <div class="fw-bold text-dark mb-1"><i class="bi bi-info-circle me-1 text-primary"></i> Tài khoản Demo Development:</div>
+                        <div class="mt-4 p-3 bg-light rounded-1 small border">
+                            <div class="fw-bold text-dark mb-1 text-uppercase" style="font-size: 0.75rem;"><i class="bi bi-info-circle me-1 text-primary"></i> Tài khoản Demo:</div>
                             <div class="text-muted">• <strong>Admin:</strong> admin@yonexshop.vn / Password@123</div>
                             <div class="text-muted">• <strong>Nhân viên:</strong> staff@yonexshop.vn / Password@123</div>
                             <div class="text-muted">• <strong>Khách hàng:</strong> customer@yonexshop.vn / Password@123</div>

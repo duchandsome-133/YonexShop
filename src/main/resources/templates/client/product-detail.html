@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/main :: html}" th:with="content=~{::#productDetailContent}">
+    <div th:replace="~{layout/main :: mainLayout(~{::#productDetailContent})}">
         <div id="productDetailContent" class="container my-4">
 
             <!-- Breadcrumbs -->
@@ -73,7 +73,7 @@
                                         <input class="btn-check" type="radio" name="variantId" th:id="'var_' + ${v.variantId}" 
                                                th:value="${v.variantId}" th:checked="${stat.first}"
                                                th:data-stock="${v.availableQuantity}">
-                                        <label class="btn btn-outline-secondary rounded-pill px-3 py-2 small" th:for="'var_' + ${v.variantId}">
+                                        <label class="btn btn-outline-secondary rounded-1 px-3 py-2 small" th:for="'var_' + ${v.variantId}">
                                             <span th:text="${v.variantName}">4UG5</span>
                                             <span class="badge bg-light text-dark border ms-1" th:text="'Kho: ' + ${v.availableQuantity}">Kho: 10</span>
                                         </label>
@@ -92,7 +92,7 @@
                             </div>
 
                             <div class="d-grid gap-2 mb-4" th:if="${product.totalAvailableQuantity > 0}">
-                                <button type="submit" class="btn btn-yonex-primary btn-lg rounded-pill py-3">
+                                <button type="submit" class="btn btn-yonex-primary btn-lg rounded-1 py-3 text-uppercase">
                                     <i class="bi bi-cart-plus me-2"></i>Thêm Vào Giỏ Hàng
                                 </button>
                             </div>
@@ -191,3 +191,4 @@
     </div>
 </body>
 </html>
+

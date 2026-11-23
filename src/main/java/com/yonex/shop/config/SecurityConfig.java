@@ -28,14 +28,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
@@ -55,13 +47,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+
         http
-            .authenticationProvider(authenticationProvider())
+            .authenticationProvider(authProvider)
             .authorizeHttpRequests(auth -> auth
                 // Static resources
                 .requestMatchers("/css/**", "/js/**", "/images/**", "/uploads/**", "/favicon.ico").permitAll()
                 // Public customer-facing pages
-                .requestMatchers("/", "/products/**", "/categories/**", "/login", "/register").permitAll()
+                .requestMatchers("/", "/products/**", "/categories/**", "/login", "/register", "/error").permitAll()
                 // Admin-only management endpoints
                 .requestMatchers("/admin/categories/**", "/admin/products/**", "/admin/users/**", 
                                  "/admin/staff/**", "/admin/reports/**").hasRole("ADMIN")

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#categoriesAdminContent}, pageTitle='Quản Lý Danh Mục', activeNav='categories'}">
+    <div th:replace="~{layout/admin :: adminLayout(~{::#categoriesAdminContent}, 'categories')}">
         <div id="categoriesAdminContent">
 
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
@@ -132,3 +132,4 @@
     </div>
 </body>
 </html>
+

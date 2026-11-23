@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/main :: html}" th:with="content=~{::#checkoutContent}">
+    <div th:replace="~{layout/main :: mainLayout(~{::#checkoutContent})}">
         <div id="checkoutContent" class="container my-4">
 
             <nav aria-label="breadcrumb" class="mb-4">
@@ -136,7 +136,7 @@
                             </div>
 
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-yonex-primary btn-lg rounded-pill py-3">
+                                <button type="submit" class="btn btn-yonex-primary btn-lg rounded-1 py-3 text-uppercase">
                                     <i class="bi bi-bag-check me-2"></i>Xác Nhận Đặt Hàng COD
                                 </button>
                             </div>
@@ -163,3 +163,4 @@
     </div>
 </body>
 </html>
+

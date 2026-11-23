@@ -44,42 +44,69 @@ public class DataInitializer implements CommandLineRunner {
                         .build()));
 
         // Ensure Admin user
-        if (userRepository.findByEmail("admin@yonexshop.vn").isEmpty()) {
-            userRepository.save(User.builder()
-                    .role(adminRole)
-                    .fullName("Quản Trị Viên Yonex")
-                    .email("admin@yonexshop.vn")
-                    .phone("0901234567")
-                    .passwordHash(passwordEncoder.encode("Password@123"))
-                    .isActive(true)
-                    .build());
-            log.info("Created default admin account: admin@yonexshop.vn / Password@123");
-        }
+        userRepository.findByEmail("admin@yonexshop.vn").ifPresentOrElse(
+                u -> {
+                    u.setPasswordHash(passwordEncoder.encode("Password@123"));
+                    u.setActive(true);
+                    u.setRole(adminRole);
+                    userRepository.save(u);
+                    log.info("Updated password for admin: admin@yonexshop.vn / Password@123");
+                },
+                () -> {
+                    userRepository.save(User.builder()
+                            .role(adminRole)
+                            .fullName("Quản Trị Viên Yonex")
+                            .email("admin@yonexshop.vn")
+                            .phone("0901234567")
+                            .passwordHash(passwordEncoder.encode("Password@123"))
+                            .isActive(true)
+                            .build());
+                    log.info("Created default admin account: admin@yonexshop.vn / Password@123");
+                }
+        );
 
         // Ensure Staff user
-        if (userRepository.findByEmail("staff@yonexshop.vn").isEmpty()) {
-            userRepository.save(User.builder()
-                    .role(staffRole)
-                    .fullName("Nhân Viên Kho & Đơn")
-                    .email("staff@yonexshop.vn")
-                    .phone("0912345678")
-                    .passwordHash(passwordEncoder.encode("Password@123"))
-                    .isActive(true)
-                    .build());
-            log.info("Created default staff account: staff@yonexshop.vn / Password@123");
-        }
+        userRepository.findByEmail("staff@yonexshop.vn").ifPresentOrElse(
+                u -> {
+                    u.setPasswordHash(passwordEncoder.encode("Password@123"));
+                    u.setActive(true);
+                    u.setRole(staffRole);
+                    userRepository.save(u);
+                    log.info("Updated password for staff: staff@yonexshop.vn / Password@123");
+                },
+                () -> {
+                    userRepository.save(User.builder()
+                            .role(staffRole)
+                            .fullName("Nhân Viên Kho & Đơn")
+                            .email("staff@yonexshop.vn")
+                            .phone("0912345678")
+                            .passwordHash(passwordEncoder.encode("Password@123"))
+                            .isActive(true)
+                            .build());
+                    log.info("Created default staff account: staff@yonexshop.vn / Password@123");
+                }
+        );
 
         // Ensure Customer user
-        if (userRepository.findByEmail("customer@yonexshop.vn").isEmpty()) {
-            userRepository.save(User.builder()
-                    .role(customerRole)
-                    .fullName("Nguyễn Văn Khách")
-                    .email("customer@yonexshop.vn")
-                    .phone("0987654321")
-                    .passwordHash(passwordEncoder.encode("Password@123"))
-                    .isActive(true)
-                    .build());
-            log.info("Created default customer account: customer@yonexshop.vn / Password@123");
-        }
+        userRepository.findByEmail("customer@yonexshop.vn").ifPresentOrElse(
+                u -> {
+                    u.setPasswordHash(passwordEncoder.encode("Password@123"));
+                    u.setActive(true);
+                    u.setRole(customerRole);
+                    userRepository.save(u);
+                    log.info("Updated password for customer: customer@yonexshop.vn / Password@123");
+                },
+                () -> {
+                    userRepository.save(User.builder()
+                            .role(customerRole)
+                            .fullName("Nguyễn Văn Khách")
+                            .email("customer@yonexshop.vn")
+                            .phone("0987654321")
+                            .passwordHash(passwordEncoder.encode("Password@123"))
+                            .isActive(true)
+                            .build());
+                    log.info("Created default customer account: customer@yonexshop.vn / Password@123");
+                }
+        );
     }
 }

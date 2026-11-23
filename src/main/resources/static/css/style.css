@@ -1,175 +1,659 @@
+/* ==========================================================================
+   YONEX OFFICIAL INSPIRED DESIGN SYSTEM (yonex.com aesthetic)
+   Precision, Innovation & High-Performance Sports Equipment Styling
+   ========================================================================== */
+
 :root {
-    --yonex-navy: #002244;
-    --yonex-navy-dark: #001428;
-    --yonex-blue: #0066cc;
-    --yonex-cyan: #00b4d8;
-    --yonex-gold: #ffb703;
-    --yonex-red: #d90429;
-    --yonex-green: #2ec4b6;
-    --yonex-gray-bg: #f8fafc;
+    /* Yonex Signature Brand Colors */
+    --yonex-black: #0b0f19;
+    --yonex-dark-slate: #141b2b;
+    --yonex-dark-card: #1c2438;
+    --yonex-white: #ffffff;
+    --yonex-offwhite: #f8fafc;
     --yonex-border: #e2e8f0;
+    --yonex-border-dark: #2d3748;
+    
+    /* Official Yonex Dual Accent Colors */
+    --yonex-green: #00873d;
+    --yonex-green-bright: #00a651;
+    --yonex-blue: #005bac;
+    --yonex-blue-dark: #003d73;
+    --yonex-cyan: #00b4d8;
+    --yonex-red: #e60012;
+    --yonex-gold: #e5a910;
+    
+    /* Typography */
+    --font-heading: 'Montserrat', 'Barlow Condensed', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* Global Reset & Typography */
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: var(--yonex-gray-bg);
-    color: #1e293b;
+    font-family: var(--font-body);
+    background-color: #f8fafc;
+    color: #1a202c;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    letter-spacing: -0.01em;
 }
 
-/* Navbar */
-.navbar-yonex {
-    background: linear-gradient(135deg, var(--yonex-navy-dark) 0%, var(--yonex-navy) 100%);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.brand-badge {
-    background: linear-gradient(90deg, #00b4d8, #0077b6);
-    color: white;
+h1, h2, h3, h4, h5, h6, .brand-font {
+    font-family: var(--font-heading);
+    letter-spacing: 0.02em;
     font-weight: 800;
-    letter-spacing: 1.5px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-size: 0.85rem;
 }
 
-/* Hero Section */
-.hero-banner {
-    background: linear-gradient(rgba(0, 34, 68, 0.85), rgba(0, 20, 40, 0.95)),
-                url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=1600&auto=format&fit=crop') center/cover;
+/* Yonex Top Announcement Strip */
+.yonex-topbar {
+    background-color: var(--yonex-black);
+    color: #94a3b8;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.yonex-topbar a {
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.yonex-topbar a:hover {
+    color: var(--yonex-white);
+}
+
+/* Yonex Official Accent Stripe (Green / Blue) */
+.yonex-tricolor-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, 
+        var(--yonex-green) 0%, 
+        var(--yonex-green) 50%, 
+        var(--yonex-blue) 50%, 
+        var(--yonex-blue) 100%);
+    width: 100%;
+}
+
+/* Yonex Modern Navbar */
+.navbar-yonex {
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid #eef2f6;
+    padding: 14px 0;
+}
+
+.yonex-brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+/* Yonex "yy" twin emblem */
+.yy-logo-badge {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    width: 28px;
+    height: 28px;
+}
+
+.yy-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 900;
     color: white;
-    padding: 90px 0;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 34, 68, 0.2);
+    font-family: var(--font-heading);
 }
 
-/* Product Cards */
-.product-card {
+.yy-circle.green {
+    background-color: var(--yonex-green);
+    left: 0;
+    top: 4px;
+    z-index: 1;
+}
+
+.yy-circle.blue {
+    background-color: var(--yonex-blue);
+    right: 0;
+    top: 8px;
+    z-index: 2;
+}
+
+.yonex-wordmark {
+    font-family: var(--font-heading);
+    font-size: 1.65rem;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    color: var(--yonex-black);
+    line-height: 1;
+}
+
+.yonex-wordmark span {
+    color: var(--yonex-blue);
+}
+
+/* Navigation Links */
+.navbar-yonex .nav-link {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #1e293b !important;
+    padding: 8px 14px !important;
+    position: relative;
+    transition: color 0.2s;
+}
+
+.navbar-yonex .nav-link:hover,
+.navbar-yonex .nav-link.active {
+    color: var(--yonex-blue) !important;
+}
+
+.navbar-yonex .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 14px;
+    right: 14px;
+    height: 2px;
+    background-color: var(--yonex-blue);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+.navbar-yonex .nav-link:hover::after,
+.navbar-yonex .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* Search Box (Sharp athletic outline) */
+.yonex-search-input {
+    border: 1px solid #cbd5e1;
+    border-radius: 2px;
+    font-size: 0.875rem;
+    padding: 8px 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.yonex-search-input:focus {
+    border-color: var(--yonex-black);
+    box-shadow: 0 0 0 2px rgba(0, 91, 172, 0.15);
+}
+
+.btn-yonex-search {
+    background-color: var(--yonex-black);
+    color: #ffffff;
+    border: 1px solid var(--yonex-black);
+    border-radius: 2px;
+    font-weight: 700;
+    padding: 8px 16px;
+    transition: background-color 0.2s;
+}
+
+.btn-yonex-search:hover {
+    background-color: var(--yonex-blue);
+    border-color: var(--yonex-blue);
+    color: #ffffff;
+}
+
+/* Hero Section (Edgy, athletic, high-contrast) */
+.yonex-hero {
+    background: linear-gradient(110deg, #0b0f19 0%, #151d30 60%, #003d73 100%);
+    position: relative;
+    overflow: hidden;
+    color: #ffffff;
+    padding: 90px 0;
+    border-bottom: 4px solid var(--yonex-green);
+}
+
+.yonex-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; width: 45%;
+    background: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.02),
+        rgba(255, 255, 255, 0.02) 2px,
+        transparent 2px,
+        transparent 16px
+    );
+    pointer-events: none;
+}
+
+.hero-tagline-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--yonex-green), var(--yonex-blue));
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 18px;
+}
+
+.hero-title {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-style: italic;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.hero-title span {
+    background: linear-gradient(90deg, #ffffff 30%, var(--yonex-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+    color: #cbd5e1;
+    font-size: 1.1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+/* Sharp Athletic Buttons */
+.btn-yonex-primary {
+    background-color: var(--yonex-blue);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    padding: 12px 26px;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-yonex-primary:hover {
+    background-color: var(--yonex-blue-dark);
+    color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 91, 172, 0.35);
+}
+
+.btn-yonex-outline {
+    background-color: transparent;
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 2px solid #ffffff;
+    border-radius: 2px;
+    padding: 10px 24px;
+    transition: all 0.2s ease;
+}
+
+.btn-yonex-outline:hover {
+    background-color: #ffffff;
+    color: var(--yonex-black);
+    transform: translateY(-1px);
+}
+
+.btn-yonex-dark {
+    background-color: var(--yonex-black);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 2px;
+    padding: 12px 24px;
+    transition: background-color 0.2s;
+}
+
+.btn-yonex-dark:hover {
+    background-color: var(--yonex-blue);
+    color: #ffffff;
+}
+
+/* Category Quick Tiles (Authentic Sports Layout) */
+.yonex-cat-card {
     background: #ffffff;
     border: 1px solid var(--yonex-border);
-    border-radius: 12px;
+    border-radius: 4px;
+    padding: 24px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    transition: all 0.25s ease;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.yonex-cat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--yonex-blue);
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+.yonex-cat-card:hover {
+    transform: translateY(-4px);
+    border-color: #cbd5e1;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.yonex-cat-card:hover::before {
+    transform: scaleX(1);
+}
+
+.yonex-cat-icon {
+    font-size: 2.2rem;
+    color: var(--yonex-blue);
+    margin-bottom: 12px;
+    transition: transform 0.25s ease;
+}
+
+.yonex-cat-card:hover .yonex-cat-icon {
+    transform: scale(1.1);
+    color: var(--yonex-green);
+}
+
+.yonex-cat-title {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--yonex-black);
+    margin: 0;
+}
+
+/* Product Cards (Clean, Minimalist, Precision) */
+.product-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
     overflow: hidden;
     transition: all 0.3s ease;
     height: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0, 34, 68, 0.12);
-    border-color: var(--yonex-cyan);
+    border-color: var(--yonex-black);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.09);
+    transform: translateY(-3px);
 }
 
 .product-card .img-container {
-    height: 240px;
-    background: #ffffff;
+    height: 250px;
+    background: #fbfcfd;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 15px;
+    padding: 20px;
     position: relative;
-    overflow: hidden;
+    border-bottom: 1px solid #f1f5f9;
 }
 
 .product-card .img-container img {
     max-height: 100%;
     max-width: 100%;
     object-fit: contain;
-    transition: transform 0.4s ease;
+    transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .product-card:hover .img-container img {
-    transform: scale(1.05);
+    transform: scale(1.06);
 }
 
 .badge-stock {
     position: absolute;
     top: 12px;
     left: 12px;
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 2px;
+}
+
+.badge-series {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--yonex-blue);
+}
+
+.product-title {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--yonex-black);
+    line-height: 1.35;
+    margin-bottom: 8px;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.product-title:hover {
+    color: var(--yonex-blue);
 }
 
 .price-tag {
+    font-family: var(--font-heading);
     font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--yonex-navy);
+    font-weight: 800;
+    color: var(--yonex-black);
+    letter-spacing: -0.01em;
+}
+
+/* Technology Showcase Section (Exclusive to Yonex Branding) */
+.yonex-tech-section {
+    background-color: var(--yonex-black);
+    color: #ffffff;
+    padding: 70px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tech-card {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    padding: 24px;
+    height: 100%;
+    transition: all 0.25s ease;
+    border-left: 3px solid var(--yonex-blue);
+}
+
+.tech-card:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-left-color: var(--yonex-green);
+    transform: translateY(-3px);
+}
+
+.tech-name {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.tech-desc {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Series Showcase Banners */
+.series-banner {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    color: white;
+    padding: 40px 30px;
+    background-size: cover;
+    background-position: center;
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.series-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(180deg, rgba(11, 15, 25, 0.1) 0%, rgba(11, 15, 25, 0.85) 100%);
+}
+
+.series-banner-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Footer (Deep obsidian, sleek, authoritative) */
+footer {
+    background-color: var(--yonex-black);
+    color: #94a3b8;
+    margin-top: auto;
+    font-size: 0.875rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footer-heading {
+    font-family: var(--font-heading);
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+.footer-heading::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background-color: var(--yonex-blue);
+}
+
+.footer-links a {
+    color: #94a3b8;
+    text-decoration: none;
+    transition: color 0.2s, padding-left 0.2s;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: #ffffff;
+    padding-left: 4px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 24px 0;
+    color: #64748b;
+    font-size: 0.8rem;
 }
 
 /* Admin Sidebar */
 .admin-sidebar {
-    background-color: var(--yonex-navy-dark);
+    background-color: var(--yonex-black);
     min-height: 100vh;
     color: #cbd5e1;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .admin-sidebar .nav-link {
     color: #94a3b8;
-    padding: 12px 20px;
-    border-radius: 8px;
-    margin: 4px 12px;
-    font-weight: 500;
+    padding: 12px 18px;
+    border-radius: 4px;
+    margin: 4px 10px;
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     display: flex;
     align-items: center;
     gap: 12px;
     transition: all 0.2s;
 }
 
-.admin-sidebar .nav-link:hover,
-.admin-sidebar .nav-link.active {
+.admin-sidebar .nav-link:hover {
     color: #ffffff;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .admin-sidebar .nav-link.active {
-    background: linear-gradient(90deg, var(--yonex-blue), var(--yonex-cyan));
-    color: white;
+    background-color: var(--yonex-blue);
+    color: #ffffff;
 }
 
 /* Status Badges */
 .status-badge {
-    font-size: 0.8rem;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
 }
+
 .status-PENDING { background-color: #fef3c7; color: #b45309; }
 .status-CONFIRMED { background-color: #e0f2fe; color: #0369a1; }
 .status-SHIPPING { background-color: #ede9fe; color: #6d28d9; }
 .status-DELIVERED { background-color: #d1fae5; color: #047857; }
 .status-CANCELLED { background-color: #fee2e2; color: #b91c1c; }
 
-/* Buttons */
-.btn-yonex-primary {
-    background: linear-gradient(135deg, var(--yonex-navy) 0%, var(--yonex-blue) 100%);
-    color: white;
-    border: none;
-    font-weight: 600;
-}
-.btn-yonex-primary:hover {
-    background: linear-gradient(135deg, var(--yonex-navy-dark) 0%, var(--yonex-navy) 100%);
-    color: white;
-}
-
-.btn-yonex-accent {
-    background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
-    color: white;
-    border: none;
-    font-weight: 600;
-}
-.btn-yonex-accent:hover {
-    background: #0077b6;
-    color: white;
-}
-
-/* Footer */
-footer {
-    background-color: var(--yonex-navy-dark);
-    color: #94a3b8;
-    margin-top: auto;
+/* Custom Badge Pill Overrides */
+.badge-yonex {
+    background: var(--yonex-blue);
+    color: #ffffff;
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 4px 8px;
+    border-radius: 2px;
 }

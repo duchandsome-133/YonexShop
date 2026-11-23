@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#productFormContent}, pageTitle=${productRequest.productId != null ? 'Cập Nhật Sản Phẩm' : 'Thêm Sản Phẩm Mới'}, activeNav='products'}">
+    <div th:replace="~{layout/admin :: adminLayout(~{::#productFormContent}, 'products')}">
         <div id="productFormContent">
 
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
@@ -93,3 +93,4 @@
     </div>
 </body>
 </html>
+

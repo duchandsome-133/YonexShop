@@ -1,168 +1,242 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" th:fragment="mainLayout(content)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title != null ? title + ' - YONEX Sports Shop' : 'YONEX Sports Shop - Phụ Kiện Thể Thao Cầu Lông'}">YONEX Sports Shop</title>
+    <title th:text="${title != null ? title + ' - YONEX Official Sports Shop' : 'YONEX - Far Beyond Ordinary | Phụ Kiện Thể Thao Cầu Lông'}">YONEX Sports Shop</title>
+    <!-- Google Fonts: Montserrat (Sporty Heading) & Inter (Clean Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
+    <!-- Custom Yonex CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
+    <!-- Yonex Top Utility / Announcement Bar -->
+    <div class="yonex-topbar py-2 d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-3">
+                <span><i class="bi bi-shield-check text-success me-1"></i> YONEX OFFICIAL VIETNAM RETAILER</span>
+                <span class="text-secondary">|</span>
+                <span>FAR BEYOND ORDINARY</span>
+            </div>
+            <div class="d-flex align-items-center gap-4">
+                <a th:href="@{/products}"><i class="bi bi-geo-alt me-1"></i> Hệ thống cửa hàng</a>
+                <a th:href="@{/orders}"><i class="bi bi-box-seam me-1"></i> Tra cứu đơn hàng</a>
+                <span><i class="bi bi-telephone me-1"></i> Hotline: <strong>0901 234 567</strong></span>
+            </div>
+        </div>
+    </div>
+
     <!-- Header Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-yonex sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-yonex sticky-top">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center gap-2" th:href="@{/}">
-                <span class="brand-badge">YONEX</span>
-                <span class="fw-bold tracking-wide text-white">SPORTS</span>
+            <!-- Brand Logo (Official YY twin ring + Wordmark) -->
+            <a class="yonex-brand-wrap me-4" th:href="@{/}">
+                <div class="yy-logo-badge">
+                    <span class="yy-circle green">Y</span>
+                    <span class="yy-circle blue">Y</span>
+                </div>
+                <span class="yonex-wordmark">YONEX</span>
             </a>
 
+            <!-- Mobile toggler -->
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="mainNavbar">
-                <!-- Search bar -->
-                <form class="d-flex mx-lg-4 my-2 my-lg-0 flex-grow-1 max-w-500" th:action="@{/products}" method="get">
+                <!-- Navigation Links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/vot-cau-long}">Vợt Cầu Lông</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/giay-cau-long}">Giày Thể Thao</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/balo-tui-vot}">Balo & Túi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categories/day-cuoc-cang-vot}">Dây Cước</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Danh Mục Khác</a>
+                        <ul class="dropdown-menu shadow border-0 rounded-1">
+                            <li><a class="dropdown-item py-2 fw-semibold" th:href="@{/products}">Tất Cả Sản Phẩm</a></li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li th:each="cat : ${activeCategories}">
+                                <a class="dropdown-item py-2" th:href="@{'/categories/' + ${cat.slug}}" th:text="${cat.name}">Vợt Cầu Lông</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <!-- Search Form (Sharp minimalist styling) -->
+                <form class="d-flex my-2 my-lg-0 me-lg-3" th:action="@{/products}" method="get" style="max-width: 280px; width: 100%;">
                     <div class="input-group">
-                        <input class="form-control border-0 rounded-start-pill ps-3" type="search" name="keyword" 
-                               placeholder="Tìm vợt, giày, phụ kiện Yonex..." th:value="${param.keyword}">
-                        <button class="btn btn-yonex-accent rounded-end-pill px-3" type="submit">
+                        <input class="form-control yonex-search-input" type="search" name="keyword" 
+                               placeholder="Tìm Astrox, Nanoflare, Giày 65Z..." th:value="${param.keyword}">
+                        <button class="btn btn-yonex-search" type="submit">
                             <i class="bi bi-search"></i>
                         </button>
                     </div>
                 </form>
 
-                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" th:href="@{/}">Trang chủ</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown">Danh mục</a>
-                        <ul class="dropdown-menu shadow-lg border-0">
-                            <li><a class="dropdown-item" th:href="@{/products}">Tất cả sản phẩm</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li th:each="cat : ${activeCategories}">
-                                <a class="dropdown-item" th:href="@{'/categories/' + ${cat.slug}}" th:text="${cat.name}">Vợt cầu lông</a>
-                            </li>
-                        </ul>
-                    </li>
-
+                <!-- Actions: Cart & Account -->
+                <div class="d-flex align-items-center gap-3">
                     <!-- Cart Icon with badge -->
-                    <li class="nav-item">
-                        <a class="nav-link text-white position-relative px-2" th:href="@{/cart}">
-                            <i class="bi bi-cart3 fs-5"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
-                                  th:text="${cartCount}" th:if="${cartCount > 0}">0</span>
-                        </a>
-                    </li>
+                    <a class="text-dark position-relative p-2 text-decoration-none" th:href="@{/cart}" title="Giỏ hàng">
+                        <i class="bi bi-bag fs-5"></i>
+                        <span class="position-absolute top-0 start-100 translate-middle badge bg-danger rounded-pill" 
+                              style="font-size: 0.65rem;"
+                              th:text="${cartCount}" th:if="${cartCount > 0}">0</span>
+                    </a>
 
-                    <!-- Authentication / User Area -->
-                    <li class="nav-item dropdown ms-lg-2" sec:authorize="isAuthenticated()">
-                        <a class="nav-link dropdown-toggle btn btn-sm btn-outline-light rounded-pill px-3 py-1" href="#" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle me-1"></i>
+                    <!-- User Account Dropdown -->
+                    <div class="dropdown" sec:authorize="isAuthenticated()">
+                        <a class="btn btn-sm btn-outline-dark dropdown-toggle rounded-1 fw-bold text-uppercase px-3 py-2" 
+                           style="font-size: 0.75rem; letter-spacing: 0.05em;" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person me-1"></i>
                             <span sec:authentication="name">Tài khoản</span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-1 mt-2">
                             <li sec:authorize="hasAnyRole('ADMIN', 'STAFF')">
-                                <a class="dropdown-item text-primary fw-semibold" th:href="@{/admin/dashboard}">
+                                <a class="dropdown-item py-2 text-primary fw-bold" th:href="@{/admin/dashboard}">
                                     <i class="bi bi-speedometer2 me-2"></i>Trang Quản Trị
                                 </a>
                             </li>
-                            <li sec:authorize="hasAnyRole('ADMIN', 'STAFF')"><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" th:href="@{/profile}"><i class="bi bi-person me-2"></i>Thông tin cá nhân</a></li>
-                            <li><a class="dropdown-item" th:href="@{/orders}"><i class="bi bi-bag-check me-2"></i>Đơn hàng của tôi</a></li>
-                            <li><a class="dropdown-item" th:href="@{/profile/addresses}"><i class="bi bi-geo-alt me-2"></i>Sổ địa chỉ</a></li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li sec:authorize="hasAnyRole('ADMIN', 'STAFF')"><hr class="dropdown-divider my-1"></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/profile}"><i class="bi bi-person me-2"></i>Hồ sơ cá nhân</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/orders}"><i class="bi bi-bag-check me-2"></i>Đơn hàng đã đặt</a></li>
+                            <li><a class="dropdown-item py-2" th:href="@{/profile/addresses}"><i class="bi bi-geo-alt me-2"></i>Sổ địa chỉ</a></li>
+                            <li><hr class="dropdown-divider my-1"></li>
                             <li>
                                 <form th:action="@{/logout}" method="post">
-                                    <button class="dropdown-item text-danger" type="submit">
+                                    <button class="dropdown-item py-2 text-danger fw-semibold" type="submit">
                                         <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
                                     </button>
                                 </form>
                             </li>
                         </ul>
-                    </li>
+                    </div>
 
-                    <li class="nav-item d-flex gap-2" sec:authorize="isAnonymous()">
-                        <a class="btn btn-sm btn-outline-light rounded-pill px-3" th:href="@{/login}">Đăng nhập</a>
-                        <a class="btn btn-sm btn-yonex-accent rounded-pill px-3" th:href="@{/register}">Đăng ký</a>
-                    </li>
-                </ul>
+                    <!-- Guest Authentication Links -->
+                    <div class="d-flex gap-2" sec:authorize="isAnonymous()">
+                        <a class="btn btn-sm btn-outline-dark rounded-1 fw-bold text-uppercase px-3 py-2" 
+                           style="font-size: 0.75rem; letter-spacing: 0.05em;" th:href="@{/login}">
+                            Đăng nhập
+                        </a>
+                        <a class="btn btn-sm btn-yonex-primary rounded-1 fw-bold text-uppercase px-3 py-2" 
+                           style="font-size: 0.75rem; letter-spacing: 0.05em;" th:href="@{/register}">
+                            Đăng ký
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
 
     <!-- Global Toast Alerts -->
     <div class="container mt-3" th:if="${successMessage != null or errorMessage != null}">
-        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert" th:if="${successMessage}">
-            <i class="bi bi-check-circle-fill me-2"></i><span th:text="${successMessage}">Thao tác thành công</span>
+        <div class="alert alert-success alert-dismissible fade show rounded-1 shadow-sm border-0" role="alert" th:if="${successMessage}">
+            <i class="bi bi-check-circle-fill me-2 text-success"></i><span th:text="${successMessage}">Thao tác thành công</span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert" th:if="${errorMessage}">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i><span th:text="${errorMessage}">Đã xảy ra lỗi</span>
+        <div class="alert alert-danger alert-dismissible fade show rounded-1 shadow-sm border-0" role="alert" th:if="${errorMessage}">
+            <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i><span th:text="${errorMessage}">Đã xảy ra lỗi</span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </div>
 
-    <!-- Main Content Injection -->
+    <!-- Main Content Body -->
     <main class="flex-grow-1">
         <div th:replace="${content}"></div>
     </main>
 
-    <!-- Footer -->
-    <footer class="py-5 mt-5">
-        <div class="container">
+    <!-- Yonex Signature Accent Line -->
+    <div class="yonex-tricolor-stripe mt-5"></div>
+
+    <!-- Official Yonex Footer -->
+    <footer class="pt-5">
+        <div class="container pb-4">
             <div class="row g-4">
+                <!-- Brand Summary -->
                 <div class="col-lg-4 col-md-6">
-                    <div class="d-flex align-items-center gap-2 mb-3">
-                        <span class="brand-badge">YONEX</span>
-                        <span class="fw-bold tracking-wide text-white fs-5">SPORTS SHOP</span>
+                    <div class="yonex-brand-wrap mb-3">
+                        <div class="yy-logo-badge">
+                            <span class="yy-circle green">Y</span>
+                            <span class="yy-circle blue">Y</span>
+                        </div>
+                        <span class="yonex-wordmark text-white">YONEX</span>
                     </div>
-                    <p class="small text-secondary">
-                        Đại lý phân phối phụ kiện và dụng cụ thể thao cầu lông Yonex chính hãng tại Việt Nam. Uy tín, chất lượng và dịch vụ bảo hành tiêu chuẩn quốc tế.
+                    <p class="text-secondary small leading-relaxed pe-lg-4">
+                        Yonex là thương hiệu dụng cụ thể thao hàng đầu thế giới đến từ Nhật Bản, đồng hành cùng các vận động viên huyền thoại với triết lý không ngừng đổi mới công nghệ và độ chuẩn xác tuyệt đối.
                     </p>
-                    <div class="d-flex gap-3 text-secondary">
-                        <i class="bi bi-shield-check text-info fs-5"></i>
-                        <span class="small">100% Chính Hãng - Thanh Toán COD An Toàn</span>
+                    <div class="d-flex gap-3 text-secondary mt-3">
+                        <span class="badge bg-dark border border-secondary px-3 py-2 small fw-normal">
+                            <i class="bi bi-check-circle-fill text-success me-1"></i> 100% Chính Hãng Yonex Japan
+                        </span>
                     </div>
                 </div>
 
-                <div class="col-lg-2 col-md-6">
-                    <h6 class="text-white fw-bold mb-3">Danh Mục</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2">
-                        <li th:each="cat : ${activeCategories}">
-                            <a class="text-secondary text-decoration-none" th:href="@{'/categories/' + ${cat.slug}}" th:text="${cat.name}">Vợt</a>
-                        </li>
+                <!-- Categories -->
+                <div class="col-lg-2 col-6">
+                    <h6 class="footer-heading">Sản Phẩm</h6>
+                    <ul class="list-unstyled footer-links small d-flex flex-column gap-2">
+                        <li><a th:href="@{/categories/vot-cau-long}">Vợt Cầu Lông</a></li>
+                        <li><a th:href="@{/categories/giay-cau-long}">Giày Thể Thao</a></li>
+                        <li><a th:href="@{/categories/balo-tui-vot}">Balo & Túi Đựng</a></li>
+                        <li><a th:href="@{/categories/day-cuoc-cang-vot}">Dây Cước Căng Vợt</a></li>
+                        <li><a th:href="@{/categories/quan-ao-the-thao}">Quần Áo Thể Thao</a></li>
+                        <li><a th:href="@{/products}">Tất Cả Sản Phẩm</a></li>
                     </ul>
                 </div>
 
-                <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white fw-bold mb-3">Chính Sách & Hỗ Trợ</h6>
-                    <ul class="list-unstyled small d-flex flex-column gap-2 text-secondary">
-                        <li>Giao hàng toàn quốc - COD</li>
-                        <li>Đổi trả trong 7 ngày nếu lỗi nhà sản xuất</li>
-                        <li>Bảo hành vợt cầu lông chính hãng</li>
-                        <li>Hướng dẫn chọn cước căng vợt phù hợp</li>
+                <!-- Support & Policy -->
+                <div class="col-lg-3 col-6">
+                    <h6 class="footer-heading">Chính Sách & Hỗ Trợ</h6>
+                    <ul class="list-unstyled footer-links small d-flex flex-column gap-2">
+                        <li><a href="#">Chính sách bảo hành vợt chính hãng</a></li>
+                        <li><a href="#">Hướng dẫn chọn vợt theo lối đánh</a></li>
+                        <li><a href="#">Bảng tư vấn lực căng cước phù hợp</a></li>
+                        <li><a href="#">Chính sách đổi trả trong 7 ngày</a></li>
+                        <li><a href="#">Giao hàng toàn quốc - Kiểm tra COD</a></li>
                     </ul>
                 </div>
 
+                <!-- Contact & Showrooms -->
                 <div class="col-lg-3 col-md-6">
-                    <h6 class="text-white fw-bold mb-3">Liên Hệ</h6>
-                    <p class="small text-secondary mb-1"><i class="bi bi-geo-alt me-2 text-info"></i>Hà Nội, Việt Nam</p>
-                    <p class="small text-secondary mb-1"><i class="bi bi-telephone me-2 text-info"></i>Hotline: 0901 234 567</p>
-                    <p class="small text-secondary mb-1"><i class="bi bi-envelope me-2 text-info"></i>support@yonexshop.vn</p>
-                    <p class="small text-secondary"><i class="bi bi-clock me-2 text-info"></i>8:30 - 21:00 (Hàng ngày)</p>
+                    <h6 class="footer-heading">Liên Hệ & Showroom</h6>
+                    <div class="small text-secondary d-flex flex-column gap-2">
+                        <p class="mb-0"><i class="bi bi-geo-alt me-2 text-info"></i>Hệ thống phân phối Yonex toàn quốc</p>
+                        <p class="mb-0"><i class="bi bi-telephone me-2 text-info"></i>Hotline: <strong>0901 234 567</strong></p>
+                        <p class="mb-0"><i class="bi bi-envelope me-2 text-info"></i>Email: contact@yonexshop.vn</p>
+                        <p class="mb-0"><i class="bi bi-clock me-2 text-info"></i>Giờ mở cửa: 08:30 - 21:30 (Cả tuần)</p>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <hr class="border-secondary my-4">
-            <div class="text-center small text-secondary">
-                © 2026 Yonex Sports Accessories Shop. Bản quyền thuộc về hệ thống thương mại điện tử phụ kiện thể thao.
+        <!-- Copyright Bottom Strip -->
+        <div class="footer-bottom">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                <div>
+                    © 2026 YONEX Official Retailer Vietnam. All Rights Reserved. FAR BEYOND ORDINARY.
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="#" class="text-secondary text-decoration-none">Bảo mật</a>
+                    <span class="text-secondary">•</span>
+                    <a href="#" class="text-secondary text-decoration-none">Điều khoản dịch vụ</a>
+                </div>
             </div>
         </div>
     </footer>

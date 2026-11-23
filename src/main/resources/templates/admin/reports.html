@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
-    <div th:replace="~{layout/admin :: html}" th:with="adminContent=~{::#reportsAdminContent}, pageTitle='Báo Cáo Doanh Thu & Bán Hàng', activeNav='reports'}">
+    <div th:replace="~{layout/admin :: adminLayout(~{::#reportsAdminContent}, 'reports')}">
         <div id="reportsAdminContent">
 
             <!-- Revenue Summary Cards -->
@@ -104,3 +104,4 @@
     </div>
 </body>
 </html>
+
