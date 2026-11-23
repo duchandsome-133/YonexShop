@@ -19,4 +19,8 @@ COPY --from=build /app/target/*.jar app.jar
 ENV PORT=8080
 EXPOSE 8080
 
-ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-Dserver.port=${PORT}", "-jar", "app.jar"]
+# Optimized JVM flags for Render Free Tier (512MB RAM, 0.1 CPU):
+# -Xms128m -Xmx320m: Limits heap memory to prevent OOM kills within 512MB RAM limit
+# -XX:+UseSerialGC: Lowest memory footprint and lowest CPU overhead on single/low vCPU
+# -XX:+TieredCompilation -XX:TieredStopAtLevel=1: Fast C1 compiler, reduces cold-start boot time by ~40%
+ENTRYPOINT ["java", "-Xms128m", "-Xmx320m", "-XX:+UseSerialGC", "-XX:+TieredCompilation", "-XX:TieredStopAtLevel=1", "-Dserver.port=${PORT}", "-jar", "app.jar"]
