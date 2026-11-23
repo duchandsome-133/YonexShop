@@ -1,12 +1,26 @@
-# WEBSITE BÁN PHỤ KIỆN THỂ THAO YONEX
+# 🏸 YONEX SPORTS E-COMMERCE PLATFORM
 
-Dự án thương mại điện tử chuyên cung cấp phụ kiện và dụng cụ thể thao cầu lông Yonex chính hãng tại Việt Nam.
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java 21" />
+  <img src="https://img.shields.io/badge/Spring_Boot-3.3.5-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot 3.3.5" />
+  <img src="https://img.shields.io/badge/Database-SQL_Server-CC292B?style=for-the-badge&logo=microsoft-sql-server&logoColor=white" alt="SQL Server" />
+  <img src="https://img.shields.io/badge/Security-Spring_Security_6-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white" alt="Spring Security 6" />
+  <img src="https://img.shields.io/badge/Migration-Flyway-CC0202?style=for-the-badge&logo=flyway&logoColor=white" alt="Flyway" />
+  <a href="https://github.com/duchandsome-133/YonexShop/actions/workflows/ci.yml">
+    <img src="https://github.com/duchandsome-133/YonexShop/actions/workflows/ci.yml/badge.svg" alt="Java CI with Maven" />
+  </a>
+</p>
+
+---
+
+## Giới thiệu
+Hệ thống thương mại điện tử chuyên cung cấp phụ kiện và dụng cụ thể thao cầu lông Yonex chính hãng, xây dựng trên nền tảng **Spring Boot 3**, **Thymeleaf**, **Spring Security 6** và **Microsoft SQL Server**.
 
 ---
 
 ## 1. Công nghệ sử dụng
-* **Backend:** Java 21/22, Spring Boot 3.3.5
-* **Web MVC & Security:** Spring MVC, Spring Security 6 (BCrypt Password Encoder, CSRF Protection, Form Login)
+* **Backend:** Java 21, Spring Boot 3.3.5
+* **Web MVC & Security:** Spring MVC, Spring Security 6 (BCrypt Password Encoder, CSRF Protection, Role-based Access Control, Form Login)
 * **Frontend Rendering:** Thymeleaf 3, Thymeleaf Layout Dialect, Bootstrap 5, Bootstrap Icons, HTML5, CSS3, JavaScript
 * **ORM & Database:** Spring Data JPA, Hibernate, **Microsoft SQL Server**
 * **Database Migration:** Flyway (`src/main/resources/db/migration`)
@@ -17,7 +31,7 @@ Dự án thương mại điện tử chuyên cung cấp phụ kiện và dụng 
 
 ## 2. Cấu trúc thư mục mã nguồn
 ```
-d:\YONEXVESION2
+YonexShop
 ├── pom.xml
 ├── README.md
 ├── .mvn/wrapper/
