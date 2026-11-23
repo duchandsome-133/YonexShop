@@ -2,12 +2,13 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copy pom.xml and source code
+# Copy pom.xml, settings.xml and source code
+COPY settings.xml .
 COPY pom.xml .
 COPY src ./src
 
-# Build package skipping tests
-RUN mvn clean package -DskipTests
+# Build package using Google Maven Central Mirror to bypass 429 rate limit
+RUN mvn clean package -s settings.xml -DskipTests
 
 # Run stage with lightweight JRE 21
 FROM eclipse-temurin:21-jre
