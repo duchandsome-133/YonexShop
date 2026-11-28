@@ -35,6 +35,8 @@
 
                         <div class="mt-auto pt-2 border-top d-flex gap-2 justify-content-end align-items-center">
                             <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 btn-edit-address"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editAddressModal"
                                     th:data-id="${addr.addressId}"
                                     th:data-name="${addr.recipientName}"
                                     th:data-phone="${addr.phone}"
@@ -160,34 +162,35 @@
                 </div>
             </div>
 
-        </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const editModalEl = document.getElementById('editAddressModal');
+                    if (!editModalEl) return;
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const editModalEl = document.getElementById('editAddressModal');
-                const editModal = editModalEl ? new bootstrap.Modal(editModalEl) : null;
-                const form = document.getElementById('editAddressForm');
-                const nameInput = document.getElementById('editRecipientName');
-                const phoneInput = document.getElementById('editPhone');
-                const addressInput = document.getElementById('editAddressLine');
-                const wardInput = document.getElementById('editWard');
-                const districtInput = document.getElementById('editDistrict');
-                const provinceInput = document.getElementById('editProvince');
-                const defaultCheck = document.getElementById('editIsDefaultCheck');
-                const defaultLabel = document.getElementById('editDefaultLabel');
+                    const form = document.getElementById('editAddressForm');
+                    const nameInput = document.getElementById('editRecipientName');
+                    const phoneInput = document.getElementById('editPhone');
+                    const addressInput = document.getElementById('editAddressLine');
+                    const wardInput = document.getElementById('editWard');
+                    const districtInput = document.getElementById('editDistrict');
+                    const provinceInput = document.getElementById('editProvince');
+                    const defaultCheck = document.getElementById('editIsDefaultCheck');
+                    const defaultLabel = document.getElementById('editDefaultLabel');
 
-                document.querySelectorAll('.btn-edit-address').forEach(btn => {
-                    btn.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
+                    editModalEl.addEventListener('show.bs.modal', function (event) {
+                        const btn = event.relatedTarget;
+                        if (!btn) return;
+
+                        const id = btn.getAttribute('data-id');
                         form.action = '/profile/addresses/' + id + '/update';
-                        nameInput.value = this.getAttribute('data-name') || '';
-                        phoneInput.value = this.getAttribute('data-phone') || '';
-                        addressInput.value = this.getAttribute('data-address') || '';
-                        wardInput.value = this.getAttribute('data-ward') || '';
-                        districtInput.value = this.getAttribute('data-district') || '';
-                        provinceInput.value = this.getAttribute('data-province') || '';
+                        nameInput.value = btn.getAttribute('data-name') || '';
+                        phoneInput.value = btn.getAttribute('data-phone') || '';
+                        addressInput.value = btn.getAttribute('data-address') || '';
+                        wardInput.value = btn.getAttribute('data-ward') || '';
+                        districtInput.value = btn.getAttribute('data-district') || '';
+                        provinceInput.value = btn.getAttribute('data-province') || '';
 
-                        const isDef = this.getAttribute('data-default') === 'true';
+                        const isDef = btn.getAttribute('data-default') === 'true';
                         defaultCheck.checked = isDef;
                         if (isDef) {
                             defaultCheck.disabled = true;
@@ -196,14 +199,10 @@
                             defaultCheck.disabled = false;
                             defaultLabel.textContent = 'Đặt làm địa chỉ nhận hàng mặc định';
                         }
-
-                        if (editModal) {
-                            editModal.show();
-                        }
                     });
                 });
-            });
-        </script>
+            </script>
+        </div>
     </div>
 </body>
 </html>
