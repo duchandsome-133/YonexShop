@@ -33,11 +33,22 @@
                         <p class="text-muted small mb-1"><i class="bi bi-telephone me-1"></i> <span th:text="${addr.phone}">0987654321</span></p>
                         <p class="text-secondary small mb-3"><i class="bi bi-geo-alt me-1"></i> <span th:text="${addr.fullAddress}">Địa chỉ</span></p>
 
-                        <div class="mt-auto pt-2 border-top d-flex gap-2 justify-content-end">
+                        <div class="mt-auto pt-2 border-top d-flex gap-2 justify-content-end align-items-center">
+                            <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 btn-edit-address"
+                                    th:data-id="${addr.addressId}"
+                                    th:data-name="${addr.recipientName}"
+                                    th:data-phone="${addr.phone}"
+                                    th:data-address="${addr.addressLine}"
+                                    th:data-ward="${addr.ward}"
+                                    th:data-district="${addr.district}"
+                                    th:data-province="${addr.province}"
+                                    th:data-default="${addr.default}">
+                                <i class="bi bi-pencil me-1"></i>Sửa
+                            </button>
                             <form th:action="@{'/profile/addresses/' + ${addr.addressId} + '/default'}" method="post" th:if="${!addr.default}">
                                 <button type="submit" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Đặt mặc định</button>
                             </form>
-                            <form th:action="@{'/profile/addresses/' + ${addr.addressId} + '/delete'}" method="post">
+                            <form th:action="@{'/profile/addresses/' + ${addr.addressId} + '/delete'}" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa địa chỉ này?');">
                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">Xóa</button>
                             </form>
                         </div>
@@ -61,29 +72,29 @@
                             <div class="modal-body py-3">
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold">Tên người nhận <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" th:field="*{recipientName}" required>
+                                    <input type="text" class="form-control" th:field="*{recipientName}" required maxlength="150">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold">Số điện thoại <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" th:field="*{phone}" required>
+                                    <input type="text" class="form-control" th:field="*{phone}" required pattern="^(0|\+84)[3|5|7|8|9][0-9]{8}$" title="Số điện thoại không đúng định dạng Việt Nam">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold">Địa chỉ chi tiết (Số nhà, đường) <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" th:field="*{addressLine}" required>
+                                    <input type="text" class="form-control" th:field="*{addressLine}" required maxlength="255">
                                 </div>
                                 <div class="row g-2 mb-3">
                                     <div class="col-6">
                                         <label class="form-label small fw-bold">Phường / Xã</label>
-                                        <input type="text" class="form-control" th:field="*{ward}">
+                                        <input type="text" class="form-control" th:field="*{ward}" maxlength="100">
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label small fw-bold">Quận / Huyện</label>
-                                        <input type="text" class="form-control" th:field="*{district}">
+                                        <input type="text" class="form-control" th:field="*{district}" maxlength="100">
                                     </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label small fw-bold">Tỉnh / Thành phố <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" th:field="*{province}" required>
+                                    <input type="text" class="form-control" th:field="*{province}" required maxlength="100">
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" th:field="*{default}" id="isDefaultCheck">
@@ -99,8 +110,100 @@
                 </div>
             </div>
 
+            <!-- Modal Edit Address -->
+            <div class="modal fade" id="editAddressModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <form id="editAddressForm" th:action="@{/profile/addresses}" method="post">
+                        <div class="modal-content rounded-4 border-0">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-navy">Chỉnh Sửa Địa Chỉ Nhận Hàng</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body py-3">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Tên người nhận <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="recipientName" id="editRecipientName" required maxlength="150">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Số điện thoại <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="phone" id="editPhone" required pattern="^(0|\+84)[3|5|7|8|9][0-9]{8}$" title="Số điện thoại không đúng định dạng Việt Nam">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Địa chỉ chi tiết (Số nhà, đường) <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="addressLine" id="editAddressLine" required maxlength="255">
+                                </div>
+                                <div class="row g-2 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold">Phường / Xã</label>
+                                        <input type="text" class="form-control" name="ward" id="editWard" maxlength="100">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small fw-bold">Quận / Huyện</label>
+                                        <input type="text" class="form-control" name="district" id="editDistrict" maxlength="100">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Tỉnh / Thành phố <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="province" id="editProvince" required maxlength="100">
+                                </div>
+                                <div class="form-check" id="editDefaultContainer">
+                                    <input class="form-check-input" type="checkbox" name="default" id="editIsDefaultCheck" value="true">
+                                    <label class="form-check-label small" for="editIsDefaultCheck" id="editDefaultLabel">Đặt làm địa chỉ nhận hàng mặc định</label>
+                                </div>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-light rounded-pill px-3" data-bs-dismiss="modal">Đóng</button>
+                                <button type="submit" class="btn btn-yonex-primary rounded-pill px-4">Lưu thay đổi</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const editModalEl = document.getElementById('editAddressModal');
+                const editModal = editModalEl ? new bootstrap.Modal(editModalEl) : null;
+                const form = document.getElementById('editAddressForm');
+                const nameInput = document.getElementById('editRecipientName');
+                const phoneInput = document.getElementById('editPhone');
+                const addressInput = document.getElementById('editAddressLine');
+                const wardInput = document.getElementById('editWard');
+                const districtInput = document.getElementById('editDistrict');
+                const provinceInput = document.getElementById('editProvince');
+                const defaultCheck = document.getElementById('editIsDefaultCheck');
+                const defaultLabel = document.getElementById('editDefaultLabel');
+
+                document.querySelectorAll('.btn-edit-address').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const id = this.getAttribute('data-id');
+                        form.action = '/profile/addresses/' + id + '/update';
+                        nameInput.value = this.getAttribute('data-name') || '';
+                        phoneInput.value = this.getAttribute('data-phone') || '';
+                        addressInput.value = this.getAttribute('data-address') || '';
+                        wardInput.value = this.getAttribute('data-ward') || '';
+                        districtInput.value = this.getAttribute('data-district') || '';
+                        provinceInput.value = this.getAttribute('data-province') || '';
+
+                        const isDef = this.getAttribute('data-default') === 'true';
+                        defaultCheck.checked = isDef;
+                        if (isDef) {
+                            defaultCheck.disabled = true;
+                            defaultLabel.textContent = 'Đây là địa chỉ mặc định';
+                        } else {
+                            defaultCheck.disabled = false;
+                            defaultLabel.textContent = 'Đặt làm địa chỉ nhận hàng mặc định';
+                        }
+
+                        if (editModal) {
+                            editModal.show();
+                        }
+                    });
+                });
+            });
+        </script>
     </div>
 </body>
 </html>
-

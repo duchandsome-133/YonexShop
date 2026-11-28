@@ -131,6 +131,31 @@ public class ProfileController {
         return "redirect:/profile/addresses";
     }
 
+    @PostMapping("/profile/addresses/{id}/update")
+    public String updateAddress(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable("id") Long addressId,
+            @Valid @ModelAttribute("addressRequest") AddressRequest request,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (userDetails == null) return "redirect:/login";
+
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    bindingResult.getAllErrors().isEmpty() ? "Dữ liệu không hợp lệ." : bindingResult.getAllErrors().get(0).getDefaultMessage());
+            return "redirect:/profile/addresses";
+        }
+
+        try {
+            userService.updateAddress(userDetails.getUserId(), addressId, request);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật địa chỉ nhận hàng thành công.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/profile/addresses";
+    }
+
     @PostMapping("/profile/addresses/{id}/default")
     public String setDefaultAddress(
             @AuthenticationPrincipal CustomUserDetails userDetails,
